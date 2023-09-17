@@ -5,33 +5,33 @@ import fastifyCors from "@fastify/cors";
 import { initSwagger } from "./swagger";
 import { join } from "path";
 import ajvKeywords from "ajv-keywords";
-import { LOGTAIL_TOKEN, NODE_ENV, PINO_LOG_LEVEL, Server } from "./server";
+import { Server } from "./server";
 import * as dotenv from "dotenv";
 
 dotenv.config();
 
-const envToLogger = {
-  development: {
-    transport: {
-      target: "pino-pretty",
-      options: {
-        translateTime: "HH:MM:ss Z",
-        ignore: "pid,hostname",
-      },
-    },
-  },
-  production: {
-    transport: {
-      target: "@logtail/pino",
-      options: { sourceToken: LOGTAIL_TOKEN },
-    },
-    level: PINO_LOG_LEVEL,
-    formatters: {
-      level: (label: string) => ({ level: label.toUpperCase() }),
-    },
-  },
-  test: false,
-};
+// const envToLogger = {
+//   development: {
+//     transport: {
+//       target: "pino-pretty",
+//       options: {
+//         translateTime: "HH:MM:ss Z",
+//         ignore: "pid,hostname",
+//       },
+//     },
+//   },
+//   production: {
+//     transport: {
+//       target: "@logtail/pino",
+//       options: { sourceToken: LOGTAIL_TOKEN },
+//     },
+//     level: PINO_LOG_LEVEL,
+//     formatters: {
+//       level: (label: string) => ({ level: label.toUpperCase() }),
+//     },
+//   },
+//   test: false,
+// };
 
 export const app = (
   opts: FastifyServerOptions = {
@@ -42,7 +42,7 @@ export const app = (
       },
       plugins: [[ajvKeywords] as any],
     },
-    logger: envToLogger[NODE_ENV as keyof typeof envToLogger],
+    logger: true,
   }
 ) => {
   const app = Fastify(opts);
@@ -65,6 +65,7 @@ new Server(server)
     //   console.log(err);
     //   server.log.error(`Erro ao iniciar RabbitMQ `, err);
     // });
+    server.log.info("Server started successfully");
   })
   .catch((err) => {
     server.log.error(err);
