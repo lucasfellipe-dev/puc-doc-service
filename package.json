@@ -6,7 +6,7 @@
   "scripts": {
     "start": "tsx src/app.ts",
     "start:prod": "cross-env NODE_ENV=production node lib/app.js",
-    "build": "tsc",
+    "build": "tsc && cp -r ./src/generated ./dist/generated",
     "build:ts": "tsup --env.NODE_ENV production",
     "dev": "FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 PORT=3000 cross-env NODE_ENV=development tsx watch src/app.ts",
     "dev:firestore": "PORT=3000 cross-env NODE_ENV=development tsx watch src/app.ts",
